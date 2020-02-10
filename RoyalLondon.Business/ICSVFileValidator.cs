@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RoyalLondon.Business
 {
-   public interface ICSVFileValidator
+    public interface ICSVFileValidator
     {
         List<Error> ValidateCSVFileData(string csvFileData);
     }
