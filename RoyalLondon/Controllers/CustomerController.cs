@@ -77,9 +77,9 @@ namespace RoyalLondon.Controllers
                 #region This method use to validate CSV data
 
                 List<Error> lstError = iCSVFileValidator.ValidateCSVFileData(csvData);
+                List<ErrorModel> lstErrorModel = new List<ErrorModel>();
                 if (lstError != null && lstError.Count > 0)
                 {
-                    List<ErrorModel> lstErrorModel = new List<ErrorModel>();
                     foreach (Error objError in lstError)
                     {
                         lstErrorModel.Add(new ErrorModel()
@@ -90,6 +90,10 @@ namespace RoyalLondon.Controllers
                     }
                     ViewBag.ErrorList = lstErrorModel;
                     return View(lstCustomerModel);
+                }
+                else
+                {
+                    ViewBag.ErrorList = lstErrorModel;
                 }
                 #endregion
 
@@ -145,13 +149,22 @@ namespace RoyalLondon.Controllers
                 {
                     Directory.CreateDirectory(targetPath);
                 }
+                string logPath = Server.MapPath("~/LogFile/");
 
-                lstCustomer = iPremiumCalculator.CustomerPremiumCalculator(lstCustomer);
-                bool IsSuccess = iFileGenerator.GenerateCustomerRenewalLetter(targetPath, lstCustomer);
+                if (!Directory.Exists(logPath))
+                {
+                    Directory.CreateDirectory(logPath);
+                }
+                lstCustomer = iPremiumCalculator.CustomerPremiumCalculator(lstCustomer, logPath);
+                bool IsSuccess = iFileGenerator.GenerateCustomerRenewalLetter(targetPath, lstCustomer,logPath);
 
                 if (IsSuccess)
                 {
                     lstCustomerModel.ForEach(x => x.FilePath = x.CustomerID + "_" + x.FirstName + "_" + x.Surname + ".txt");
+                }
+                else
+                {
+                    lstCustomerModel = new List<CustomerModel>();
                 }
 
                 #endregion

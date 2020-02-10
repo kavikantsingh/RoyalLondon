@@ -8,6 +8,6 @@ namespace RoyalLondon.Business
 {
    public interface IFileGenerator
     {
-        bool GenerateCustomerRenewalLetter(string filepath, List<Customer> lstCustomer);
+        bool GenerateCustomerRenewalLetter(string filepath, List<Customer> lstCustomer, string logPath);
     }
 }

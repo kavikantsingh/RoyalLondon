@@ -28,6 +28,19 @@
                               
                                 <button type="reset" class="btn btn-danger">Reset</button>
                             </div>
+                        
+                            @{
+                                var errorCount = (List<RoyalLondon.Models.ErrorModel>)ViewBag.ErrorList;
+                                if (Model != null && Model.Count() == 0 && errorCount != null && errorCount.Count == 0)
+                                {
+                                  
+                                            <span class="alert-warning" style="">
+                                                Looks like, The renewal letter is already available at output location. Please check log.txt file for more details.
+                                            </span>
+                                       
+                                }
+                            }
+                       
                       <div class="form-group">
                       @{
                           var lstError = (List<RoyalLondon.Models.ErrorModel>)ViewBag.ErrorList;
@@ -54,6 +67,8 @@
                           }
                         </div>
                         <div class="form-group">
+                            @{ if (Model != null && Model.Count() > 0)
+                                {
                             <table class="table" id="customers">
                                 <thead>
                                     <tr>
@@ -76,20 +91,22 @@
                                         <td>@customer.ProductName</td>
                                         <td>£@customer.PayoutAmount</td>
                                         <td>£@customer.PremiumAmount</td>
-                                        <td><a href="@HttpContext.Current.Request.Url.AbsoluteUri/OutPutFile/@customer.FilePath" target="_blank">Download</a></td>
+                                        <td><a href="@HttpContext.Current.Request.Url.AbsoluteUri/OutPutFile/@customer.FilePath" download="@customer.FilePath" target="_blank">Download</a></td>
                                     </tr>
-                                            }
+                                        }
                                         }
                                     </tbody>
                                     </table>
+                                        }
+                                        }
                         </div>
                         </div>
                     </div>
 
 
-    }
-            
-  
+}
+
+
 </div>
 
 

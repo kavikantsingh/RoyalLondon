@@ -31,19 +31,29 @@ namespace RoyalLondon.Business
                         }
                         else if(headerVerified)
                         {
-                            if(CommonUtility.IsNumber(row.Split(',')[0])&& CommonUtility.IsDecimal(row.Split(',')[5])&& CommonUtility.IsDecimal(row.Split(',')[6]))
+                            if (CommonUtility.IsNumber(row.Split(',')[0]) && CommonUtility.IsDecimal(row.Split(',')[5]) && CommonUtility.IsDecimal(row.Split(',')[6]))
                             {
 
                             }
                             else
                             {
-                                
+                                string errorMessage = string.Empty;
+                                if (CommonUtility.IsNumber(row.Split(',')[0]) == false)
+                                {
+                                    errorMessage = string.Format("Customer ID is {0}", CommonUtility.IsNumber(row.Split(',')[0]) == true ? "OK" : " not OK, please verify it, it should be greater than zero integer only");
+                                }
+                                if (CommonUtility.IsDecimal(row.Split(',')[5]) == false)
+                                {
+                                    errorMessage += string.Format("PayoutAmount is {0},", CommonUtility.IsDecimal(row.Split(',')[5]) == true ? "OK" : "not OK, it should be non zero decimal only");
+                                }
+                                if (CommonUtility.IsDecimal(row.Split(',')[6]) == false)
+                                {
+                                    errorMessage += string.Format("AnnualPremium is {0}", CommonUtility.IsDecimal(row.Split(',')[6]) == true ? "OK" : "not OK, it should be non zero decimal only");
+                                }
                                 lstError.Add(new Error
                                 {
-                                    ErrorFieldName = "Customer ID :"+(row.Split(',')[0]),
-                                    ErrorMessage=string.Format("Customer ID is {0}," +
-                                    ". PayoutAmount is {1}," +
-                                    ". AnnualPremium is {2}", CommonUtility.IsNumber(row.Split(',')[0]) == true?"OK":" not OK, please verify it, it should be greater than zero integer only", CommonUtility.IsDecimal(row.Split(',')[5]) == true?"OK":"not OK, it should be non zero decimal only", CommonUtility.IsDecimal(row.Split(',')[6]) == true ? "OK" : "not OK, it should be non zero decimal only")
+                                    ErrorFieldName = "Customer ID :" + (row.Split(',')[0]),
+                                    ErrorMessage = errorMessage
 
                                 });
                             }

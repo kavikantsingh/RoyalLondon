@@ -8,6 +8,6 @@ namespace RoyalLondon.Business
 {
     public interface IPremiumCalculator
     {
-        List<Customer> CustomerPremiumCalculator(List<Customer> lstCustomer);
+        List<Customer> CustomerPremiumCalculator(List<Customer> lstCustomer,string logPath);
     }
 }
