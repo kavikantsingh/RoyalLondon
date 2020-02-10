@@ -21,7 +21,7 @@ namespace RoyalLondon.Common
 
         public static int GetPrecisionLength(decimal value)
         {
-            string number = String.Format("{0:0.00}", value); // Convert to string // Convert to string
+            string number = String.Format("{0:0.00}", value); // Convert to string 
             int length = 0;
             if(value!=0)
              length = number.Substring(number.IndexOf(".")).Length;
@@ -31,9 +31,9 @@ namespace RoyalLondon.Common
 
         public static decimal GetDecimalWithTwoPrecision(decimal value)
         {
-            string number = String.Format("{0:0.00}", value); // Convert to string
+            
             value = SignificantTruncate(value, 2);
-            return value;//Convert.ToDecimal(number);
+            return value;
         }
         public static decimal SignificantTruncate(decimal num, int significantDigits)
         {

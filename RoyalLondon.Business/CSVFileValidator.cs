@@ -40,15 +40,15 @@ namespace RoyalLondon.Business
                                 string errorMessage = string.Empty;
                                 if (CommonUtility.IsNumber(row.Split(',')[0]) == false)
                                 {
-                                    errorMessage = string.Format("Customer ID is {0}", CommonUtility.IsNumber(row.Split(',')[0]) == true ? "OK" : " not OK, please verify it, it should be greater than zero integer only");
+                                    errorMessage = string.Format("Customer ID is {0}", CommonUtility.IsNumber(row.Split(',')[0]) == true ? " correct" : " not correct, please verify it. It should be greater than zero integer only.");
                                 }
                                 if (CommonUtility.IsDecimal(row.Split(',')[5]) == false)
                                 {
-                                    errorMessage += string.Format("PayoutAmount is {0},", CommonUtility.IsDecimal(row.Split(',')[5]) == true ? "OK" : "not OK, it should be non zero decimal only");
+                                    errorMessage += string.Format("PayoutAmount is {0},", CommonUtility.IsDecimal(row.Split(',')[5]) == true ? "correct" : "not correct, it should be non zero decimal only.");
                                 }
                                 if (CommonUtility.IsDecimal(row.Split(',')[6]) == false)
                                 {
-                                    errorMessage += string.Format("AnnualPremium is {0}", CommonUtility.IsDecimal(row.Split(',')[6]) == true ? "OK" : "not OK, it should be non zero decimal only");
+                                    errorMessage += string.Format("AnnualPremium is {0}", CommonUtility.IsDecimal(row.Split(',')[6]) == true ? "correct" : "not correct, it should be non zero decimal only.");
                                 }
                                 lstError.Add(new Error
                                 {
@@ -65,7 +65,7 @@ namespace RoyalLondon.Business
                             {
                                 ErrorFieldName = "Uploaded CSV File Columns Name",
 
-                                ErrorMessage = "Your CSV file should be similar as sample given on the page. The columns and their should be same."
+                                ErrorMessage = "Your CSV file should be similar as sample given on the page. The columns name should be same."
                             });
                             break;
                         }
@@ -77,7 +77,7 @@ namespace RoyalLondon.Business
                         {
                             ErrorFieldName ="Uploaded CSV File",
                            
-                            ErrorMessage="Your CSV file should be similar as sample given on the page. The columns and their should be same."
+                            ErrorMessage="Your CSV file should be similar as sample given on the page. The columns name should be same."
                         });
                         break;
                     }
