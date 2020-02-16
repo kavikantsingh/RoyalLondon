@@ -7,33 +7,54 @@ using System.Threading.Tasks;
 
 namespace RoyalLondon.Business
 {
- public   class CSVFileValidator:ICSVFileValidator
+    /// <summary>
+    /// Validate CSV file class
+    /// </summary>
+    public class CSVFileValidator : ICSVFileValidator
     {
-        public  List<Error> ValidateCSVFileData(string csvFileData)
+        /// <summary>
+        /// This method implemented for validate CSV file
+        /// </summary>
+        /// <param name="csvFileData"></param>
+        /// <returns></returns>
+        public ValidateResult ValidateCSVFileData(string csvFileData,int totalMonths,decimal creditCharge)
         {
-            List<Error> lstError = new List<Error>();
+            ValidateResult objValidateResult = new ValidateResult();
+            objValidateResult.lstError = new List<Error>();
+            objValidateResult.lstCustomer = new List<Customer>();
             bool headerVerified = false;
-            csvFileData=csvFileData.Replace("\r", "");
+            csvFileData = csvFileData.Replace("\r", "");
             //Execute a loop over the rows.
             foreach (string row in csvFileData.Split('\n'))
             {
                 if (!string.IsNullOrEmpty(row))
                 {
                     //skip header row 
-                    if (row.Split(',').Length ==7)
+                    if (row.Split(',').Length == 7)
                     {
-                        if(row.Split(',')[0].ToLower().Trim()== "id" && row.Split(',')[1].ToLower().Trim() == "title" &&
-                            row.Split(',')[2].ToLower().Trim() == "firstname" && row.Split(',')[3].ToLower().Trim() == "surname" && row.Split(',')[4].ToLower().Trim() == "productname" 
-                            && row.Split(',')[5].ToLower().Trim() == "payoutamount"&& row.Split(',')[6].ToLower().Trim() == "annualpremium")
+                        if (row.Split(',')[0].ToLower().Trim() == "id" && row.Split(',')[1].ToLower().Trim() == "title" &&
+                            row.Split(',')[2].ToLower().Trim() == "firstname" && row.Split(',')[3].ToLower().Trim() == "surname" && row.Split(',')[4].ToLower().Trim() == "productname"
+                            && row.Split(',')[5].ToLower().Trim() == "payoutamount" && row.Split(',')[6].ToLower().Trim() == "annualpremium")
                         {
                             headerVerified = true;
-                          
+
                         }
-                        else if(headerVerified)
+                        else if (headerVerified)
                         {
                             if (CommonUtility.IsNumber(row.Split(',')[0]) && CommonUtility.IsDecimal(row.Split(',')[5]) && CommonUtility.IsDecimal(row.Split(',')[6]))
                             {
-
+                                objValidateResult.lstCustomer.Add(new Customer()
+                                {
+                                    CreditCharge = creditCharge,
+                                    TotalMonth = totalMonths,
+                                    CustomerID = CommonUtility.GetIntegerValue(row.Split(',')[0]),
+                                    Title = row.Split(',')[1],
+                                    FirstName = row.Split(',')[2],
+                                    Surname = row.Split(',')[3],
+                                    ProductName = row.Split(',')[4],
+                                    PayoutAmount = CommonUtility.GetDecimalValue(row.Split(',')[5]),
+                                    PremiumAmount = CommonUtility.GetDecimalValue(row.Split(',')[6]),
+                                });
                             }
                             else
                             {
@@ -50,18 +71,18 @@ namespace RoyalLondon.Business
                                 {
                                     errorMessage += string.Format("AnnualPremium is {0}", CommonUtility.IsDecimal(row.Split(',')[6]) == true ? "correct" : "not correct, it should be non zero decimal only.");
                                 }
-                                lstError.Add(new Error
+                                objValidateResult.lstError.Add(new Error
                                 {
                                     ErrorFieldName = "Customer ID :" + (row.Split(',')[0]),
                                     ErrorMessage = errorMessage
 
                                 });
                             }
-                           
+
                         }
                         else
                         {
-                            lstError.Add(new Error
+                            objValidateResult.lstError.Add(new Error
                             {
                                 ErrorFieldName = "Uploaded CSV File Columns Name",
 
@@ -69,22 +90,22 @@ namespace RoyalLondon.Business
                             });
                             break;
                         }
-                       
+
                     }
                     else
                     {
-                        lstError.Add(new Error
+                        objValidateResult.lstError.Add(new Error
                         {
-                            ErrorFieldName ="Uploaded CSV File",
-                           
-                            ErrorMessage="Your CSV file should be similar as sample given on the page. The columns name should be same."
+                            ErrorFieldName = "Uploaded CSV File",
+
+                            ErrorMessage = "Your CSV file should be similar as sample given on the page. The columns name should be same."
                         });
                         break;
                     }
                 }
             }
 
-            return lstError;
+            return objValidateResult;
         }
     }
 }

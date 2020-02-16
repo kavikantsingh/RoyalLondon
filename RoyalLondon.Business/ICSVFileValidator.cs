@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace RoyalLondon.Business
 {
+    /// <summary>
+    /// ICSVFileValidator
+    /// </summary>
     public interface ICSVFileValidator
     {
-        List<Error> ValidateCSVFileData(string csvFileData);
+        /// <summary>
+        /// This interface implemented for validate CSV file
+        /// </summary>
+        /// <param name="csvFileData"></param>
+        /// <returns></returns>
+        ValidateResult ValidateCSVFileData(string csvFileData, int totalMonths, decimal creditCharge);
     }
 }

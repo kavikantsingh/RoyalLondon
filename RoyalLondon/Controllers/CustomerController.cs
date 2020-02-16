@@ -11,6 +11,9 @@ using System.Web.Mvc;
 
 namespace RoyalLondon.Controllers
 {
+    /// <summary>
+    /// Customer controller
+    /// </summary>
     public class CustomerController : Controller
     {
         private IPremiumCalculator iPremiumCalculator;
@@ -76,11 +79,15 @@ namespace RoyalLondon.Controllers
 
                 #region This method use to validate CSV data
 
-                List<Error> lstError = iCSVFileValidator.ValidateCSVFileData(csvData);
+                //Total premium month and credit charge amount is configurable, so later we can change it from web.config file 
+                int totalPremiumMonths = CommonUtility.GetIntegerValue(ConfigurationManager.AppSettings["TotalPremiumMonth"]);
+                decimal creditCharge = CommonUtility.GetIntegerValue(ConfigurationManager.AppSettings["CreditCharge"]);
+
+                ValidateResult objValidateResult = iCSVFileValidator.ValidateCSVFileData(csvData,totalPremiumMonths,creditCharge);
                 List<ErrorModel> lstErrorModel = new List<ErrorModel>();
-                if (lstError != null && lstError.Count > 0)
+                if (objValidateResult != null && objValidateResult.lstError.Count > 0)
                 {
-                    foreach (Error objError in lstError)
+                    foreach (Error objError in objValidateResult.lstError)
                     {
                         lstErrorModel.Add(new ErrorModel()
                         {
@@ -89,7 +96,6 @@ namespace RoyalLondon.Controllers
                         });
                     }
                     ViewBag.ErrorList = lstErrorModel;
-                    return View(lstCustomerModel);
                 }
                 else
                 {
@@ -98,50 +104,6 @@ namespace RoyalLondon.Controllers
                 #endregion
 
                 #region After validation read CSV data and calculate prenium to generate renewal letter 
-
-                //Execute a loop over the rows.
-                foreach (string row in csvData.Split('\n'))
-                {
-                    if (!string.IsNullOrEmpty(row))
-                    {
-                        //skip header row 
-                        if (row.Split(',')[0] != "ID")
-                        {
-                            lstCustomerModel.Add(new CustomerModel
-                            {
-                                CustomerID = CommonUtility.GetIntegerValue(row.Split(',')[0]),
-                                Title = row.Split(',')[1],
-                                FirstName = row.Split(',')[2],
-                                Surname = row.Split(',')[3],
-                                ProductName = row.Split(',')[4],
-                                PayoutAmount = CommonUtility.GetDecimalValue(row.Split(',')[5]),
-                                PremiumAmount = CommonUtility.GetDecimalValue(row.Split(',')[6]),
-
-                            });
-                        }
-                    }
-                }
-
-                //Total premium month and credit charge amount is configurable, so later we can change it from web.config file 
-                int totalPremiumMonths = CommonUtility.GetIntegerValue(ConfigurationManager.AppSettings["TotalPremiumMonth"]);
-                decimal creditCharge = CommonUtility.GetIntegerValue(ConfigurationManager.AppSettings["CreditCharge"]);
-
-                foreach (CustomerModel objCustomerModel in lstCustomerModel)
-                {
-                    lstCustomer.Add(new Customer()
-                    {
-                        CustomerID = objCustomerModel.CustomerID,
-                        FirstName = objCustomerModel.FirstName,
-                        Surname = objCustomerModel.Surname,
-                        ProductName = objCustomerModel.ProductName,
-                        Title = objCustomerModel.Title,
-                        PayoutAmount = objCustomerModel.PayoutAmount,
-                        CreditCharge = creditCharge,
-                        PremiumAmount = objCustomerModel.PremiumAmount,
-                        TotalMonth = totalPremiumMonths,
-                    });
-
-                }
 
                 string targetPath = Server.MapPath("~/OutPutFile/");
 
@@ -155,11 +117,27 @@ namespace RoyalLondon.Controllers
                 {
                     Directory.CreateDirectory(logPath);
                 }
-                lstCustomer = iPremiumCalculator.CustomerPremiumCalculator(lstCustomer, logPath);
+                lstCustomer = iPremiumCalculator.CustomerPremiumCalculator(objValidateResult.lstCustomer, logPath);
                 bool IsSuccess = iFileGenerator.GenerateCustomerRenewalLetter(targetPath, lstCustomer,logPath);
 
                 if (IsSuccess)
                 {
+                    foreach (Customer objCustomerModel in lstCustomer)
+                    {
+                        lstCustomerModel.Add(new CustomerModel()
+                        {
+                            CustomerID = objCustomerModel.CustomerID,
+                            FirstName = objCustomerModel.FirstName,
+                            Surname = objCustomerModel.Surname,
+                            ProductName = objCustomerModel.ProductName,
+                            Title = objCustomerModel.Title,
+                            PayoutAmount = objCustomerModel.PayoutAmount,
+                            CreditCharge = creditCharge,
+                            PremiumAmount = objCustomerModel.PremiumAmount,
+                            TotalMonth = totalPremiumMonths,
+                        });
+
+                    }
                     lstCustomerModel.ForEach(x => x.FilePath = x.CustomerID + "_" + x.FirstName + "_" + x.Surname + ".txt");
                 }
                 else

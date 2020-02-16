@@ -3,4 +3,3 @@ S:\TCS Project\Project\RoyalLondon.Common\bin\Debug\RoyalLondon.Common.pdb
 S:\TCS Project\Project\RoyalLondon.Common\obj\Debug\RoyalLondon.Common.csproj.CoreCompileInputs.cache
 S:\TCS Project\Project\RoyalLondon.Common\obj\Debug\RoyalLondon.Common.dll
 S:\TCS Project\Project\RoyalLondon.Common\obj\Debug\RoyalLondon.Common.pdb
-S:\TCS Project\Project\RoyalLondon.Common\obj\Debug\RoyalLondon.Common.csprojResolveAssemblyReference.cache

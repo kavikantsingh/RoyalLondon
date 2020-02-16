@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace RoyalLondon.Business
 {
+    /// <summary>
+    /// Customer Model class
+    /// </summary>
     public class Customer
     {
         #region Properties 

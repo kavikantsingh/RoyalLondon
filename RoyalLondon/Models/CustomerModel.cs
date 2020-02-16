@@ -22,6 +22,7 @@ namespace RoyalLondon.Models
         public decimal OtherMonthlyPaymentsAmount { get; set; }
         public string FilePath { get; set; }
         public List<ErrorModel> lstErrorModel { get; set; }
+        public int TotalMonth { get; set; }
         #endregion
     }
 }

@@ -79,12 +79,11 @@ namespace RoyalLondon.Business
             sb.AppendLine(Environment.NewLine);
             sb.AppendLine(string.Format("Your annual premium will be £{0}.", objCustomer.PremiumAmount));
             sb.AppendLine(Environment.NewLine);
-            sb.AppendLine(string.Format("If you choose to pay by Direct Debit, we will add a credit charge of £{0}, bringing the total to", objCustomer.CreditCharge));
-            sb.AppendLine(string.Format("£{0}. This is payable by an initial payment of £{1},", objCustomer.TotalPremiumAmount, objCustomer.InitialMonthlyPaymentAmount));
-            sb.AppendLine(string.Format(" followed by 11 payments of £{0} each.",objCustomer.OtherMonthlyPaymentsAmount));
+            sb.AppendLine(string.Format("If you choose to pay by Direct Debit, we will add a credit charge of {0}%, bringing the total to", objCustomer.CreditCharge));
+            sb.AppendLine(string.Format("£{0}. This is payable by an initial payment of £{1}, followed by 11 payments of £{2} each.", objCustomer.TotalPremiumAmount, objCustomer.InitialMonthlyPaymentAmount, objCustomer.OtherMonthlyPaymentsAmount));
             sb.AppendLine(Environment.NewLine);
             sb.AppendLine("Please get in touch with us to arrange your renewal by visiting https://www.regallutoncodingtest.co.uk/renew");
-            sb.AppendLine(" or calling us on 01625 123456.");
+            sb.AppendLine("or calling us on 01625 123456.");
             sb.AppendLine(Environment.NewLine);
             sb.AppendLine("Kind Regards");
             sb.AppendLine("Regal Luton");
