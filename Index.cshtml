@@ -1,0 +1,113 @@
+﻿@model IEnumerable<RoyalLondon.Models.CustomerModel>
+@{
+    ViewBag.Title = "Insurance Company 2021";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div style="background-color: rgb(251, 246, 242); border-radius: 5px; border: 1px solid rgb(108, 163, 232); overflow: hidden;padding-bottom:210px;" class="itemContainer" id="NatureType">
+    <h2 style="text-align:center;margin-bottom: 20px;margin-top: 20px;">Creates renewal invitation letters to customers</h2>
+
+    @using (Html.BeginForm("Index", "Customer", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+                <div class="container">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h3>Please upload CSV file</h3>
+                      
+                            <!-- COMPONENT START -->
+                            <div class="form-group">
+                                <div class="input-group input-file" name="postedFile">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default btn-choose" type="button">Choose</button>
+                                    </span>
+                                    <input id="txtfile" type="text" class="form-control" placeholder='Choose a file...' />
+                                </div>
+                                <span class="input-group-btn">CSV Sample file :<a href="@HttpContext.Current.Request.Url.AbsoluteUri/Uploads/Customer.csv">Download</a></span><span class="danger" id="spnInvalidfile"></span>
+                            </div>
+                            <!-- COMPONENT END -->
+                            <div class="form-group">
+                                <button type="submit" id="btnsubmit" disabled="disabled" class="btn btn-primary"style="margin-left:195px;">Submit</button>
+                              
+                                <button type="reset" class="btn btn-danger">Reset</button>
+                            </div>
+                        
+                            @{
+                                var errorCount = (List<RoyalLondon.Models.ErrorModel>)ViewBag.ErrorList;
+                                if (Model != null && Model.Count() == 0 && errorCount != null && errorCount.Count == 0)
+                                {
+                                  
+                                            <span class="alert-warning" style="">
+                                                Looks like, The renewal letter is already available at output location. Please check log.txt file for more details.
+                                            </span>
+                                       
+                                }
+                            }
+                       
+                      <div class="form-group">
+                      @{
+                          var lstError = (List<RoyalLondon.Models.ErrorModel>)ViewBag.ErrorList;
+                          if (lstError != null && lstError.Count > 0)
+                          {
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Field Name</th>
+                                        <th>Error Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                             @foreach (var objerror in lstError)
+                             {
+                                <tr class="alert-danger">
+                                  <td>@objerror.ErrorFieldName</td>
+                                  <td>@objerror.ErrorMessage</td>
+                                 </tr>
+                             }
+                             </tbody>
+                            </table>
+                          }
+                          }
+                        </div>
+                        <div class="form-group">
+                            @{ if (Model != null && Model.Count() > 0)
+                                {
+                            <table class="table" id="customers">
+                                <thead>
+                                    <tr>
+                                        <th>Customer ID</th>
+                                        <th>First Name</th>
+                                        <th>Surname</th>
+                                        <th>Product Name</th>
+                                        <th>Total Payout</th>
+                                        <th>Annual Premium</th>
+                                        <th>Download Letter</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{ foreach (var customer in Model)
+                                        {
+                                    <tr class="table-warning">
+                                        <td>@customer.CustomerID</td>
+                                        <td>@customer.FirstName</td>
+                                        <td>@customer.Surname</td>
+                                        <td>@customer.ProductName</td>
+                                        <td>£@customer.PayoutAmount</td>
+                                        <td>£@customer.PremiumAmount</td>
+                                        <td><a href="@HttpContext.Current.Request.Url.AbsoluteUri/OutPutFile/@customer.FilePath" download="@customer.FilePath" target="_blank">Download</a></td>
+                                    </tr>
+                                        }
+                                        }
+                                    </tbody>
+                                    </table>
+                                        }
+                                        }
+                        </div>
+                        </div>
+                    </div>
+
+
+}
+
+
+</div>
+
+
+  
